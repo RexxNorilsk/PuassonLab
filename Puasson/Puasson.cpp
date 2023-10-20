@@ -1,8 +1,7 @@
 ﻿#include <iostream>
 #include "Puasson.h"
 #include <fstream>
-
-#define splitting 0.5
+#include <time.h>
 
 using namespace std;
 
@@ -21,32 +20,34 @@ void Print(int size, double** data)
 
 int main()
 {
-	
-	double a = 3/splitting;
-	double b = 5/ splitting;
+	double splitting = 0.2;
+	double a = 2;
+	double b = 5;
 
 	double bb = b * b;
 	double aa = a * a;
-	int size = b/ splitting+3;
-
+	int size = ((2*b)/splitting)+3;
+	double x, y;
 	int offset = size / 2;
 	double** data = new double* [size];
 	for (int i = 0; i < size; i++)
 		data[i] = new double[size];
 
-	for (int i = -offset; i < size- offset; i++)
+	for (int i = 0; i < size; i++)
 	{
-		for (int j = -offset; j < size- offset; j++)
+		for (int j = 0; j < size; j++)
 		{
-			if (i * i + j * j <= bb && i * i + j * j >= aa)
-				data[i + offset][j + offset] = 1;
+			x = (i-offset) * splitting;
+			y = (j-offset) * splitting;
+			if (x * x + y * y <= bb && x * x + y * y >= aa)
+				data[i][j] = 1;
 			else
-				data[i + offset][j + offset] = 0;
+				data[i][j] = 0;
 		}
 	}
-	double x, y;
-
-	for (int e = 0; e < 1000000; e++)
+	
+	clock_t tStart = clock();
+	for (int e = 0; e < 10000; e++)
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -62,7 +63,8 @@ int main()
 			}
 		}
 	}
-
-
+	printf("Time taken: %.2fs\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
 	Print(size, data);
+
+	return 0;
 }
